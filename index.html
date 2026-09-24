@@ -44,16 +44,459 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;background:ra
 #cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(99,102,241,0.35);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.15s ease-out,width 0.25s,height 0.25s}
 body:has(a:hover) #cursor,body:has(button:hover) #cursor{width:20px;height:20px}
 
-/* LOADER */
-#loader{position:fixed;inset:0;background:rgba(248,250,252,0.98);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;backdrop-filter:blur(14px)}
-.loader-logo{font-family:'Syne',sans-serif;font-size:4rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-2px}
-.loader-text{font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--text-secondary);letter-spacing:4px;text-transform:uppercase;opacity:0.9}
-.loader-bar{width:300px;height:1px;background:rgba(15,23,42,0.08);overflow:hidden;position:relative}
-.loader-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--cyan),var(--pink));width:0%;transition:width 0.05s linear;box-shadow:0 0 10px rgba(99,102,241,0.25)}
-.loader-items{display:flex;flex-direction:column;gap:0.4rem;margin-top:1rem}
-.loader-item{font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--text-secondary);opacity:0;transform:translateX(-10px);transition:all 0.3s;letter-spacing:2px}
-.loader-item.show{opacity:1;transform:translateX(0)}
-.loader-item.done{color:var(--primary-soft)}
+/* =========================================
+   MODERN PORTFOLIO LOADER
+   ========================================= */
+
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  background: #f8fafc;
+
+  transition:
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* -----------------------------------------
+   SUBTLE BACKGROUND GRID
+   ----------------------------------------- */
+
+.loader-grid {
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    linear-gradient(
+      rgba(15, 23, 42, 0.035) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(15, 23, 42, 0.035) 1px,
+      transparent 1px
+    );
+
+  background-size: 50px 50px;
+
+  mask-image: radial-gradient(
+    circle at center,
+    black 20%,
+    transparent 75%
+  );
+
+  -webkit-mask-image: radial-gradient(
+    circle at center,
+    black 20%,
+    transparent 75%
+  );
+}
+
+
+/* -----------------------------------------
+   CENTER CONTENT
+   ----------------------------------------- */
+
+.loader-content {
+  position: relative;
+  z-index: 2;
+
+  width: min(90%, 420px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* -----------------------------------------
+   P MARK
+   ----------------------------------------- */
+
+.loader-mark {
+  position: relative;
+
+  width: 130px;
+  height: 130px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 2rem;
+}
+
+
+.loader-mark span {
+  position: relative;
+  z-index: 3;
+
+  font-family: 'Syne', sans-serif;
+
+  font-size: 5rem;
+  font-weight: 800;
+
+  letter-spacing: -7px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--cyan),
+      var(--pink)
+    );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: loaderLogo 2s ease-in-out infinite;
+}
+
+
+/* -----------------------------------------
+   ORBITS
+   ----------------------------------------- */
+
+.loader-orbit {
+  position: absolute;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(99, 102, 241, 0.18);
+}
+
+
+.orbit-1 {
+  width: 100px;
+  height: 100px;
+
+  animation:
+    orbitRotate 5s linear infinite;
+}
+
+
+.orbit-2 {
+  width: 130px;
+  height: 130px;
+
+  border-color: rgba(236, 72, 153, 0.12);
+
+  animation:
+    orbitRotateReverse 8s linear infinite;
+}
+
+
+/* Small orbit dots */
+
+.orbit-1::after,
+.orbit-2::after {
+  content: '';
+
+  position: absolute;
+
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: var(--primary);
+
+  box-shadow:
+    0 0 12px rgba(99, 102, 241, 0.5);
+}
+
+
+.orbit-1::after {
+  top: -3px;
+  left: 50%;
+}
+
+
+.orbit-2::after {
+  bottom: -3px;
+  right: 20%;
+  background: var(--pink);
+}
+
+
+/* -----------------------------------------
+   PERCENTAGE
+   ----------------------------------------- */
+
+.loader-percent {
+  font-family: 'JetBrains Mono', monospace;
+
+  font-size: 0.8rem;
+
+  color: var(--text-secondary);
+
+  letter-spacing: 2px;
+
+  margin-bottom: 0.8rem;
+}
+
+
+#loaderPercent {
+  font-size: 1rem;
+
+  color: var(--text-primary);
+
+  font-weight: 600;
+}
+
+
+/* -----------------------------------------
+   PROGRESS BAR
+   ----------------------------------------- */
+
+.loader-progress {
+  position: relative;
+
+  width: 100%;
+  height: 2px;
+
+  overflow: hidden;
+
+  background: rgba(15, 23, 42, 0.08);
+
+  border-radius: 10px;
+}
+
+
+.loader-progress-fill {
+  position: relative;
+
+  width: 0%;
+  height: 100%;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--primary),
+      var(--cyan),
+      var(--pink)
+    );
+
+  box-shadow:
+    0 0 15px rgba(99, 102, 241, 0.35);
+
+  transition: width 0.08s linear;
+}
+
+
+/* Moving highlight */
+
+.loader-progress-fill::after {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  right: 0;
+
+  width: 60px;
+  height: 100%;
+
+  background: rgba(255, 255, 255, 0.8);
+
+  filter: blur(6px);
+
+  animation: progressGlow 1.2s ease-in-out infinite;
+}
+
+
+/* -----------------------------------------
+   STATUS
+   ----------------------------------------- */
+
+.loader-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 1rem;
+
+  font-family: 'JetBrains Mono', monospace;
+
+  font-size: 0.65rem;
+
+  letter-spacing: 1.5px;
+
+  text-transform: uppercase;
+
+  color: var(--text-secondary);
+}
+
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: var(--primary);
+
+  box-shadow:
+    0 0 10px rgba(99, 102, 241, 0.6);
+
+  animation: statusPulse 1.2s ease-in-out infinite;
+}
+
+
+/* -----------------------------------------
+   FOOTER
+   ----------------------------------------- */
+
+.loader-footer {
+  position: absolute;
+
+  left: 2rem;
+  right: 2rem;
+  bottom: 1.5rem;
+
+  display: flex;
+  justify-content: space-between;
+
+  font-family: 'JetBrains Mono', monospace;
+
+  font-size: 0.55rem;
+
+  letter-spacing: 2px;
+
+  color: var(--text-secondary);
+
+  opacity: 0.6;
+}
+
+
+/* =========================================
+   ANIMATIONS
+   ========================================= */
+
+@keyframes loaderLogo {
+
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(
+      0 0 0 rgba(99, 102, 241, 0)
+    );
+  }
+
+  50% {
+    transform: scale(1.04);
+
+    filter: drop-shadow(
+      0 10px 30px rgba(99, 102, 241, 0.18)
+    );
+  }
+}
+
+
+@keyframes orbitRotate {
+
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+@keyframes orbitRotateReverse {
+
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+
+@keyframes progressGlow {
+
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+}
+
+
+@keyframes statusPulse {
+
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+  .loader-mark {
+    width: 110px;
+    height: 110px;
+  }
+
+  .loader-mark span {
+    font-size: 4rem;
+  }
+
+  .orbit-1 {
+    width: 85px;
+    height: 85px;
+  }
+
+  .orbit-2 {
+    width: 110px;
+    height: 110px;
+  }
+
+  .loader-content {
+    width: calc(100% - 3rem);
+  }
+
+  .loader-footer {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:all 0.45s ease;backdrop-filter:blur(0px);background:transparent}
@@ -2207,17 +2650,40 @@ footer{padding:3rem;border-top:1px solid rgba(148,163,184,0.2);text-align:center
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 
-<!-- LOADER -->
+<!-- ===== MODERN PORTFOLIO LOADER ===== -->
+
 <div id="loader">
-  <div class="loader-logo">P.</div>
-  <div class="loader-text">Initializing Portfolio System</div>
-  <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
-  <div class="loader-items">
-    <div class="loader-item" id="li1">► Loading .NET & React architecture...</div>
-    <div class="loader-item" id="li2">► Initializing 3D engine...</div>
-    <div class="loader-item" id="li3">► Compiling project modules...</div>
-    <div class="loader-item" id="li4">► System ready</div>
+
+  <div class="loader-grid"></div>
+
+  <div class="loader-content">
+
+    <div class="loader-mark">
+      <span>P</span>
+      <div class="loader-orbit orbit-1"></div>
+      <div class="loader-orbit orbit-2"></div>
+    </div>
+
+    <div class="loader-percent">
+      <span id="loaderPercent">0</span><span>%</span>
+    </div>
+
+    <div class="loader-progress">
+      <div class="loader-progress-fill" id="loaderFill"></div>
+    </div>
+
+    <div class="loader-status">
+      <span class="status-dot"></span>
+      <span id="loaderStatus">Preparing experience</span>
+    </div>
+
   </div>
+
+  <div class="loader-footer">
+    <span>FULL STACK DEVELOPER</span>
+    <span>2026</span>
+  </div>
+
 </div>
 
 <!-- NAV -->
@@ -3009,29 +3475,67 @@ function animRing(){
 animRing();
 
 // ===== LOADER =====
-const fill=document.getElementById('loaderFill');
-const items=['li1','li2','li3','li4'];
-let pct=0;
-const loadInterval=setInterval(()=>{
-  pct+=1.2;
-  fill.style.width=Math.min(pct,100)+'%';
-  if(pct>20)document.getElementById('li1').classList.add('show');
-  if(pct>45)document.getElementById('li2').classList.add('show');
-  if(pct>70)document.getElementById('li3').classList.add('show');
-  if(pct>88){
-    document.getElementById('li4').classList.add('show');
-    items.forEach(id=>document.getElementById(id).classList.add('done'));
+// =========================================
+// MODERN PORTFOLIO LOADER
+// =========================================
+
+const loader = document.getElementById('loader');
+const fill = document.getElementById('loaderFill');
+const percent = document.getElementById('loaderPercent');
+const status = document.getElementById('loaderStatus');
+
+let progress = 0;
+
+const statuses = [
+  [0, 'Preparing experience'],
+  [25, 'Loading interface'],
+  [50, 'Building components'],
+  [75, 'Initializing interactions'],
+  [92, 'Almost ready'],
+  [100, 'Welcome']
+];
+
+const loaderInterval = setInterval(() => {
+
+  progress += 2.5;
+
+  if (progress > 100) {
+    progress = 100;
   }
-  if(pct>=100){
-    clearInterval(loadInterval);
-    setTimeout(()=>{
-      const loader=document.getElementById('loader');
-      loader.style.transition='opacity 0.8s, transform 0.8s';
-      loader.style.opacity='0';loader.style.transform='scale(1.05)';
-      setTimeout(()=>loader.style.display='none',800);
-    },400);
+
+  fill.style.width = `${progress}%`;
+
+  percent.textContent = Math.floor(progress);
+
+  // Update status text
+  for (let i = statuses.length - 1; i >= 0; i--) {
+
+    if (progress >= statuses[i][0]) {
+      status.textContent = statuses[i][1];
+      break;
+    }
+
   }
-},25);
+
+  // Finished
+  if (progress >= 100) {
+
+    clearInterval(loaderInterval);
+
+    setTimeout(() => {
+
+      loader.style.opacity = '0';
+      loader.style.transform = 'scale(1.015)';
+
+      setTimeout(() => {
+        loader.style.display = 'none';
+      }, 600);
+
+    }, 150);
+
+  }
+
+}, 25);
 
 //====navbar
 const hamburger = document.getElementById("hamburger");
