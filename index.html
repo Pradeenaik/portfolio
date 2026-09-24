@@ -24,7 +24,7 @@
 --border:rgba(148,163,184,0.18);
 --border-strong:rgba(148,163,184,0.26);
 --primary:#6366f1;
---primary-soft:#8b5cf6;
+--primary-soft:#286be9;
 --cyan:#06b6d4;
 --pink:#ec4899;
 --text:#0f172a;
@@ -39,10 +39,151 @@ html{scroll-behavior:smooth}
 body{min-height:100vh;background:radial-gradient(circle at 20% 14%,rgba(99,102,241,0.14),transparent 24%),radial-gradient(circle at 85% 18%,rgba(236,72,153,0.12),transparent 18%),linear-gradient(180deg,#f8fafc,#eef2ff 32%,#f8fafc 100%);color:var(--text);font-family:'Space Grotesk',sans-serif;overflow-x:hidden;position:relative;}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 20%,rgba(255,255,255,0.76),transparent 35%),radial-gradient(circle at 15% 80%,rgba(6,182,212,0.08),transparent 20%),radial-gradient(circle at 85% 70%,rgba(236,72,153,0.06),transparent 18%);opacity:0.95;mix-blend-mode:screen;}
 
-/* CURSOR */
-#cursor{position:fixed;width:12px;height:12px;background:rgba(99,102,241,0.95);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s,width 0.25s,height 0.25s,opacity 0.3s;box-shadow:0 0 16px rgba(99,102,241,0.35)}
-#cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(99,102,241,0.35);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.15s ease-out,width 0.25s,height 0.25s}
-body:has(a:hover) #cursor,body:has(button:hover) #cursor{width:20px;height:20px}
+/* =========================================
+   MODERN CUSTOM CURSOR
+   ========================================= */
+
+#cursor {
+  position: fixed;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: var(--primary);
+
+  pointer-events: none;
+
+  z-index: 99999;
+
+  transform: translate(-50%, -50%);
+
+  opacity: 0;
+
+  box-shadow:
+    0 0 12px rgba(99, 102, 241, 0.45);
+
+  transition:
+    width 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+/* -----------------------------------------
+   OUTER RING
+   ----------------------------------------- */
+
+#cursor-ring {
+  position: fixed;
+
+  width: 34px;
+  height: 34px;
+
+  border: 1px solid rgba(99, 102, 241, 0.32);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  z-index: 99998;
+
+  transform: translate(-50%, -50%);
+
+  opacity: 0;
+
+  backdrop-filter: blur(1px);
+
+  transition:
+    width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease,
+    background 0.3s ease,
+    opacity 0.3s ease;
+}
+
+
+/* -----------------------------------------
+   CURSOR ACTIVE
+   ----------------------------------------- */
+
+body.cursor-active #cursor,
+body.cursor-active #cursor-ring {
+  opacity: 1;
+}
+
+
+/* -----------------------------------------
+   LINK / BUTTON HOVER
+   ----------------------------------------- */
+
+body.cursor-hover #cursor {
+  width: 5px;
+  height: 5px;
+
+  background: var(--pink);
+
+  box-shadow:
+    0 0 14px rgba(236, 72, 153, 0.5);
+}
+
+
+body.cursor-hover #cursor-ring {
+  width: 48px;
+  height: 48px;
+
+  border-color: rgba(99, 102, 241, 0.45);
+
+  background: rgba(99, 102, 241, 0.035);
+}
+
+
+/* -----------------------------------------
+   CLICK EFFECT
+   ----------------------------------------- */
+
+body.cursor-click #cursor-ring {
+  width: 28px;
+  height: 28px;
+
+  border-color: rgba(99, 102, 241, 0.65);
+}
+
+
+/* -----------------------------------------
+   HIDE NATIVE CURSOR
+   ----------------------------------------- */
+
+@media (pointer: fine) {
+
+  html,
+  body,
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    cursor: none;
+  }
+
+}
+
+
+/* -----------------------------------------
+   MOBILE / TOUCH
+   ----------------------------------------- */
+
+@media (pointer: coarse) {
+
+  #cursor,
+  #cursor-ring {
+    display: none;
+  }
+
+}
 
 /* =========================================
    MODERN PORTFOLIO LOADER
@@ -223,7 +364,7 @@ body:has(a:hover) #cursor,body:has(button:hover) #cursor{width:20px;height:20px}
 
 .orbit-2::after {
   bottom: -3px;
-  right: 20%;
+  right: 40%;
   background: var(--pink);
 }
 
@@ -501,7 +642,8 @@ body:has(a:hover) #cursor,body:has(button:hover) #cursor{width:20px;height:20px}
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:all 0.45s ease;backdrop-filter:blur(0px);background:transparent}
 nav.scrolled{background:rgba(255,255,255,0.78);border-bottom:1px solid rgba(148,163,184,0.2);backdrop-filter:blur(24px);}
-.nav-logo{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.nav-logo{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent; text-decoration:none;letter-spacing:1px;transition:all 0.25s ease;}
+.nav-logo-link{text-decoration:none;color:var(--text);transition:all 0.25s ease}
 .nav-links{display:flex;gap:2.5rem;list-style:none}
 .nav-links a{color:var(--text-secondary);text-decoration:none;font-size:0.85rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;transition:all 0.25s ease;position:relative}
 .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--primary);transition:width 0.3s ease}
@@ -2688,7 +2830,7 @@ footer{padding:3rem;border-top:1px solid rgba(148,163,184,0.2);text-align:center
 
 <!-- NAV -->
 <nav id="nav">
-  <div class="nav-logo">PRADEEP.</div>
+  <div class="nav-logo"><a href="#cinematic-intro" class="nav-logo-link">PRADEEP.</a></div>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#projects">Projects</a></li>
@@ -3392,29 +3534,63 @@ footer{padding:3rem;border-top:1px solid rgba(148,163,184,0.2);text-align:center
     <div class="reveal">
       <div class="section-label" style="justify-content:center">05 — Contact</div>
       <h2 class="contact-title">Let's Build <span style="background:linear-gradient(135deg,var(--primary),var(--pink));background-clip:text;-webkit-text-fill-color:transparent">Together</span></h2>
-      <p class="contact-subtitle">Got a project idea? Looking for a MERN Stack engineer? Let's connect and create something extraordinary.</p>
+      <p class="contact-subtitle">Got a project idea? Looking for a Full Stack engineer? Let's connect and create something extraordinary.</p>
     </div>
-    <div class="contact-form reveal">
-      <div class="form-grid">
-        <div class="form-group">
-          <label class="form-label">Your Name</label>
-          <input type="text" class="form-input" placeholder="John Doe">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" placeholder="john@company.com">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Subject</label>
-        <input type="text" class="form-input" placeholder="Project collaboration / Job opportunity">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Message</label>
-        <textarea class="form-input" placeholder="Tell me about your project..."></textarea>
-      </div>
-      <button class="send-btn" onclick="handleSend()">⚡ Send Message</button>
+   <form id="contactForm" class="contact-form reveal"> 
+  <div class="form-grid"> 
+    <div class="form-group"> 
+      <label class="form-label" for="name">Your Name</label> 
+      <input 
+        type="text" 
+        id="from_name" 
+        name="from_name" 
+        class="form-input" 
+        placeholder="Your Name" 
+        required
+      >
     </div>
+
+    <div class="form-group">
+      <label class="form-label" for="email">Email Address</label>
+      <input 
+        type="email" 
+        id="from_email" 
+        name="email" 
+        class="form-input" 
+        placeholder="Your Email" 
+        required
+      >
+    </div>
+  </div>
+
+  <div class="form-group"> 
+    <label class="form-label" for="subject">Subject</label> 
+    <input 
+      type="text" 
+      id="subject" 
+      name="subject" 
+      class="form-input" 
+      placeholder="Project collaboration / Job opportunity" 
+      required
+    >
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="message">Message</label>
+    <textarea 
+      id="message" 
+      name="message" 
+      class="form-input" 
+      placeholder="Tell me about your project..." 
+      rows="6" 
+      required
+    ></textarea>
+  </div>
+
+  <button type="submit" class="send-btn">
+    Send Message
+  </button>
+</form>
     <div class="contact-links">
 
   <a href="https://github.com/Pradeenaik"
@@ -3457,22 +3633,121 @@ footer{padding:3rem;border-top:1px solid rgba(148,163,184,0.2);text-align:center
   <p class="footer-text">MERN Stack Developer — Building the future, one commit at a time.</p>
   <p style="font-size:0.75rem;color:rgba(15,23,42,0.4);margin-top:1rem;font-family:'JetBrains Mono',monospace">© 2024 Pradeep. Crafted with ♥ and TypeScript.</p>
 </footer>
+<!-- EmailJS library -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<!-- EmailJS initialization -->
+<script>
+  emailjs.init({
+    publicKey: 'DQV5lKxC3CLVesxYE'
+  });
+</script>
 
 <script>
-// ===== CURSOR =====
+  
+
+// =========================================
+// MODERN CUSTOM CURSOR
+// =========================================
+
 const cursor = document.getElementById('cursor');
 const ring = document.getElementById('cursor-ring');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{
-  mx=e.clientX;my=e.clientY;
-  cursor.style.left=mx+'px';cursor.style.top=my+'px';
+
+let mouseX = 0;
+let mouseY = 0;
+
+let ringX = 0;
+let ringY = 0;
+
+let hasMoved = false;
+
+
+// -----------------------------------------
+// MOUSE MOVEMENT
+// -----------------------------------------
+
+document.addEventListener('mousemove', (e) => {
+
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+
+  // Small dot follows immediately
+  cursor.style.left = `${mouseX}px`;
+  cursor.style.top = `${mouseY}px`;
+
+  if (!hasMoved) {
+
+    hasMoved = true;
+
+    document.body.classList.add('cursor-active');
+
+  }
+
 });
-function animRing(){
-  rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;
-  ring.style.left=rx+'px';ring.style.top=ry+'px';
-  requestAnimationFrame(animRing);
+
+
+// -----------------------------------------
+// SMOOTH RING
+// -----------------------------------------
+
+function animateCursor() {
+
+  ringX += (mouseX - ringX) * 0.13;
+  ringY += (mouseY - ringY) * 0.13;
+
+  ring.style.left = `${ringX}px`;
+  ring.style.top = `${ringY}px`;
+
+  requestAnimationFrame(animateCursor);
+
 }
-animRing();
+
+animateCursor();
+
+
+// -----------------------------------------
+// INTERACTIVE ELEMENTS
+// -----------------------------------------
+
+const interactiveElements = document.querySelectorAll(
+  'a, button, input, textarea, select, [role="button"]'
+);
+
+
+interactiveElements.forEach((element) => {
+
+  element.addEventListener('mouseenter', () => {
+
+    document.body.classList.add('cursor-hover');
+
+  });
+
+
+  element.addEventListener('mouseleave', () => {
+
+    document.body.classList.remove('cursor-hover');
+
+  });
+
+});
+
+
+// -----------------------------------------
+// CLICK EFFECT
+// -----------------------------------------
+
+document.addEventListener('mousedown', () => {
+
+  document.body.classList.add('cursor-click');
+
+});
+
+
+document.addEventListener('mouseup', () => {
+
+  document.body.classList.remove('cursor-click');
+
+});
 
 // ===== LOADER =====
 // =========================================
@@ -4184,15 +4459,78 @@ document.querySelectorAll('.project-showcase').forEach(showcase=>{
 });
 
 // ===== SEND =====
-function handleSend(){
-  const btn=document.querySelector('.send-btn');
-  btn.textContent='✓ Message Sent!';
-  btn.style.background='linear-gradient(135deg,#22c55e,#16a34a)';
-  setTimeout(()=>{
-    btn.textContent='⚡ Send Message';
-    btn.style.background='';
-  },3000);
-}
+// =========================================
+// CONTACT FORM
+// =========================================
+
+const contactForm = document.getElementById('contactForm');
+const sendBtn = contactForm.querySelector('.send-btn');
+
+contactForm.addEventListener('submit', async (e) => {
+
+  e.preventDefault();
+
+  // Prevent double submission
+  sendBtn.disabled = true;
+
+  const originalText = sendBtn.textContent;
+
+  sendBtn.textContent = 'Sending...';
+
+
+  try {
+
+    await emailjs.sendForm(
+      'service_29k9wov',
+      'template_esujkdy',
+      contactForm
+    );
+
+
+    // Success
+    sendBtn.textContent = '✓ Message Sent!';
+
+    sendBtn.style.background =
+      'linear-gradient(135deg, #22c55e, #16a34a)';
+
+
+    contactForm.reset();
+
+
+    setTimeout(() => {
+
+      sendBtn.textContent = originalText;
+
+      sendBtn.style.background = '';
+
+      sendBtn.disabled = false;
+
+    }, 3000);
+
+
+  } catch (error) {
+
+    console.error('Email failed:', error);
+
+    sendBtn.textContent = '✕ Failed to Send';
+
+    sendBtn.style.background =
+      'linear-gradient(135deg, #ef4444, #dc2626)';
+
+
+    setTimeout(() => {
+
+      sendBtn.textContent = originalText;
+
+      sendBtn.style.background = '';
+
+      sendBtn.disabled = false;
+
+    }, 3000);
+
+  }
+
+});
 </script>
 </body>
 </html>
